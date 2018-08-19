@@ -18,7 +18,7 @@ namespace WeakEvents.Fody.Test
             BeforeAssemblyPath = Path.Combine(assemblyFolder, assemblyToProcess);
             AfterAssemblyPath = BeforeAssemblyPath.Replace(".dll", "2.dll");
 
-            var moduleDefinition = ModuleDefinition.ReadModule(BeforeAssemblyPath);
+            var moduleDefinition = ModuleDefinition.ReadModule(BeforeAssemblyPath, new ReaderParameters { ReadSymbols = true });
             var weavingTask = new ModuleWeaver
             {
                 ModuleDefinition = moduleDefinition,
@@ -30,7 +30,7 @@ namespace WeakEvents.Fody.Test
 
             weavingTask.Execute();
 
-            moduleDefinition.Write(AfterAssemblyPath);
+            moduleDefinition.Write(AfterAssemblyPath, new WriterParameters { WriteSymbols = true });
 
             //ProvideIlStepThrough(AfterAssemblyPath);
 
