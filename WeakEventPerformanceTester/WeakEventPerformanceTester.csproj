@@ -59,13 +59,9 @@
     <Content Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WeakEvents.Fody\WeakEvents.Fody.csproj">
+    <ProjectReference Include="..\WeakEvents.Fody\WeakEvents.Fody.csproj" Condition="'$(TargetFrameworkVersion)'=='Dummy'">
       <Project>{a537654e-0edb-4055-b1e4-6471a069e577}</Project>
       <Name>WeakEvents.Fody</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeakEvents.Runtime\WeakEvents.Runtime.csproj">
-      <Project>{8f8b79b0-dd65-46d7-a685-34e8242838e8}</Project>
-      <Name>WeakEvents.Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="..\WeakEvents\WeakEvents.csproj">
       <Project>{f17dfff7-cf29-4451-9300-3901ba10dd21}</Project>
@@ -74,9 +70,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>rd /s/q "$(SolutionDir)Tools"
-md "$(SolutionDir)Tools"
-copy "$(SolutionDir)WeakEvents.Fody\bin\Debug\*.dll" "$(SolutionDir)Tools"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Fody.3.1.4\build\Fody.targets" Condition="Exists('..\packages\Fody.3.1.4\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -3,6 +3,7 @@ using Mono.Cecil.Rocks;
 using System;
 using System.Linq;
 using WeakEvents.Runtime;
+using FodyTools;
 
 namespace WeakEvents.Fody
 {
@@ -18,9 +19,12 @@ namespace WeakEvents.Fody
         private readonly Lazy<MethodReference> _delegateConvertChangeType;
         private readonly Lazy<MethodReference> _openFindWeakT;
         private readonly Lazy<MethodReference> _loadOpenMakeWeakT;
+        private readonly CodeImporter _codeImporter;
 
         public ModuleImporter(ModuleDefinition moduleDef)
         {
+            _codeImporter = new CodeImporter(moduleDef, "WeakEvents.Runtime");
+
             _moduleDef = moduleDef;
             _compilerGeneratedAttribute = new Lazy<CustomAttribute>(LoadCompilerGeneratedAttribute);
             _openActionTCtor = new Lazy<MethodReference>(LoadOpenActionTConstructor);
@@ -95,20 +99,17 @@ namespace WeakEvents.Fody
 
         private MethodReference LoadDelegateConvertChangeType()
         {
-            System.Reflection.MethodInfo changeType = typeof(DelegateConvert).GetMethod("ChangeType", new[] { typeof(Delegate), typeof(Type) });
-            return _moduleDef.ImportReference(changeType);
+            return _codeImporter.ImportMethod(() => DelegateConvert.ChangeType(default(Delegate), default(Type)));
         }
 
         private MethodReference LoadOpenFindWeakT()
         {
-            System.Reflection.MethodInfo findWeak = typeof(WeakEventHandlerExtensions).GetMethod("FindWeak");
-            return _moduleDef.ImportReference(findWeak);
+            return _codeImporter.Import(typeof(WeakEventHandlerExtensions)).Methods.Single(m => m.Name == "FindWeak");
         }
 
         private MethodReference LoadOpenMakeWeakT()
         {
-            System.Reflection.MethodInfo makeWeak = typeof(WeakEventHandlerExtensions).GetMethod("MakeWeak");
-            return _moduleDef.ImportReference(makeWeak);
+            return _codeImporter.Import(typeof(WeakEventHandlerExtensions)).Methods.Single(m => m.Name == "MakeWeak");
         }
     }
 }

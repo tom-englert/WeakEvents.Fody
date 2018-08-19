@@ -18,7 +18,9 @@ namespace WeakEvents.Fody
 
             var weakEventWeaver = new EventWeaver(ModuleDefinition, this);
 
-            foreach (var typeDef in ModuleDefinition.Types)
+            var typeDefinitions = ModuleDefinition.Types.ToArray();
+
+            foreach (var typeDef in typeDefinitions)
             {
                 if (typeDef.IsTypeToProcess())
                 {
@@ -43,7 +45,7 @@ namespace WeakEvents.Fody
 
         private void CleanReferences()
         {
-            var referenceToRemove = ModuleDefinition.AssemblyReferences.FirstOrDefault(x => x.Name.Equals(typeof(ImplementWeakEventsAttribute).Assembly.GetName().Name));
+            var referenceToRemove = ModuleDefinition.AssemblyReferences.FirstOrDefault(x => x.Name.Equals("WeakEvents"));
             if (referenceToRemove != null)
             {
                 ModuleDefinition.AssemblyReferences.Remove(referenceToRemove);
@@ -72,7 +74,7 @@ namespace WeakEvents.Fody
 
         private bool IsWeakEventAttribute(CustomAttribute attribute)
         {
-            return attribute.Constructor.DeclaringType.FullName.Equals(typeof(ImplementWeakEventsAttribute).FullName);
+            return attribute.Constructor.DeclaringType.FullName.Equals("WeakEvents.ImplementWeakEventsAttribute");
         }
     }
 }

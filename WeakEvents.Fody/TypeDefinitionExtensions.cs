@@ -12,7 +12,7 @@ namespace WeakEvents.Fody
 
         private static bool HasWeakEventAttribute(TypeDefinition typeDefinition)
         {
-            return typeDefinition.CustomAttributes.Any(attr => typeof(ImplementWeakEventsAttribute).FullName.Equals(attr.AttributeType.FullName));
+            return typeDefinition.CustomAttributes.Any(attr => "WeakEvents.ImplementWeakEventsAttribute".Equals(attr.AttributeType.FullName));
         }
     }
 }
